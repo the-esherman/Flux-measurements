@@ -1,0 +1,28 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Flux measurements
+
+This is a small project to process data from the EGM4 IRGA.
+A work in progress, mainly personal project.
+
+Currently there is a file for processing cleaned data. A script to process raw-data from the EGM4, merge it with other measurements of the same day and merge it with data from a TinyTag temperature logger and PAR Photon Flux Sensor coupled to a EM50 logger station is in the works.
+
+Future work incl. expanding to the EGM5 which has a slightly different file system.
+
+# The EGM4
+
+The EGM4 only stores 1000 lines of data internally and therefore several files might be generated during one days measurements.
+
+As I have not been using a standard size chamber, the volume is not the same as the chamber from PP systems. This is among the factors that — for now — need to be manually set.
+
