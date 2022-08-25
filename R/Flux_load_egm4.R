@@ -44,8 +44,8 @@ library(writexl) # For writing excel files
 #
 # From .dat
 #
-# ════════════════════════════╗
-#                             ▼
+# ══════════════════════════════╗
+#                               ▼
 fluxdat<-read.delim("clean_data/Cleaned_test_2min.dat") # Read as a tab delimited files
 # ### Main Script: calculations ###
 #
