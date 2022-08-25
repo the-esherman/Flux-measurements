@@ -149,7 +149,8 @@ fifteenMin <- 189
 #
 fluxdata_2min <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
-  filter(Recordings == twoMin)
+  filter(Recordings == twoMin) %>%
+  select(-c("Recordings"))
 if (nrow(fluxdata_2min)*ncol(fluxdata_2min)>0){
   for (v in max(fluxdata_2min$Plot)){
     fluxdata_2min$Plot[(1+twoMin*(v-1)):(twoMin+twoMin*(v-1))] = 0 + v
@@ -164,7 +165,8 @@ if (nrow(fluxdata_2min)*ncol(fluxdata_2min)>0){
 #
 fluxdata_5min <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
-  filter(Recordings == fiveMin)
+  filter(Recordings == fiveMin) %>%
+  select(-c("Recordings"))
 if (nrow(fluxdata_5min)*ncol(fluxdata_5min)>0){
   for (v in max(fluxdata_5min$Plot)){
     fluxdata_5min$Plot[(1+fiveMin*(v-1)):(fiveMin+fiveMin*(v-1))] = 0 + v
@@ -179,7 +181,8 @@ if (nrow(fluxdata_5min)*ncol(fluxdata_5min)>0){
 #
 fluxdata_10min <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
-  filter(Recordings == tenMin)
+  filter(Recordings == tenMin) %>%
+  select(-c("Recordings"))
 if (nrow(fluxdata_10min)*ncol(fluxdata_10min)>0){
   for (v in max(fluxdata_10min$Plot)){
     fluxdata_10min$Plot[(1+tenMin*(v-1)):(tenMin+tenMin*(v-1))] = 0 + v
@@ -194,7 +197,8 @@ if (nrow(fluxdata_10min)*ncol(fluxdata_10min)>0){
 #
 fluxdata_15min <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
-  filter(Recordings == fifteenMin)
+  filter(Recordings == fifteenMin) %>%
+  select(-c("Recordings"))
 if (nrow(fluxdata_15min)*ncol(fluxdata_15min)>0){
   for (v in max(fluxdata_15min$Plot)){
     fluxdata_15min$Plot[(1+fifteenMin*(v-1)):(fifteenMin+fifteenMin*(v-1))] = 0 + v
