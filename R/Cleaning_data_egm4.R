@@ -1,5 +1,6 @@
 # Data cleaning and combining
 # For EGM4
+# Using CPY-2 (Probe type 8), or forced probe type 8
 #
 #
 # Manual:
@@ -55,17 +56,17 @@ flux2 <- flux2 %>%
 #
 flux_all <- bind_rows(flux1,flux2, .id = NULL) %>%
   rename("Plot" = ";Plot",
-         "CO2.Ref" = `CO2 Ref`,
-         "mb.Ref" = `mb Ref`, 
-         "mbR.Temp" = `mbR Temp`, 
-         "Input.A" = `Input A`, 
-         "Input.B" = `Input B`, 
-         "Input.C" = `Input C`, 
-         "Input.D" = `Input D`, 
-         "Input.E" = `Input E`, 
-         "Input.F" = `Input F`,
-         "Input.G" = `Input G`,
-         "Input.H" = `Input H`,
+         "CO2.Ref" = `CO2 Ref`, # DC, concentration in ppm
+         "mb.Ref" = `mb Ref`, # RH, relative humidity sensor, if attached
+         "mbR.Temp" = `mbR Temp`, # Temperature of RH sensor
+         "Input.A" = `Input A`, # PAR from PAR sensor
+         "Input.B" = `Input B`, # RH, from chamber
+         "Input.C" = `Input C`, # Temperature of soil
+         "Input.D" = `Input D`, # DC, change in concentration in ppm
+         "Input.E" = `Input E`, # DT, change in time in sec
+         "Input.F" = `Input F`, # SR rate, g (CO2) m^2 Hour^-1
+         "Input.G" = `Input G`, # Not used
+         "Input.H" = `Input H`, # +/- SR rate, 00 if respiration (CO2 increase), 01 if CO2 decrease
          "Probe.Type" = `Probe Type`)
 #
 #
