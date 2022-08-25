@@ -138,6 +138,7 @@ flux_recLength <- as_tibble(flux_recLength)
 #
 #
 # Move data according to whether they are 2min (27), 5min (64), 10min (127), or 15min (189)
+# The EGM4 measures every 4.8s and therefor 2min (120s) becomes 27 lines (~124s)
 #
 twoMin <- 27
 fiveMin <- 64
@@ -153,6 +154,9 @@ if (nrow(fluxdata_2min)*ncol(fluxdata_2min)>0){
   for (v in max(fluxdata_2min$Plot)){
     fluxdata_2min$Plot[(1+twoMin*(v-1)):(twoMin+twoMin*(v-1))] = 0 + v
   }
+#
+# ═══════════════════════════╗
+#                            ▼
   write_delim(fluxdata_2min,"clean_data/Test_clean_2min.dat", delim = "\t")
 }
 #
@@ -165,6 +169,9 @@ if (nrow(fluxdata_5min)*ncol(fluxdata_5min)>0){
   for (v in max(fluxdata_5min$Plot)){
     fluxdata_5min$Plot[(1+fiveMin*(v-1)):(fiveMin+fiveMin*(v-1))] = 0 + v
   }
+#
+# ═══════════════════════════╗
+#                            ▼
   write_delim(fluxdata_5min,"clean_data/Test_clean_5min.dat", delim = "\t")
 }
 #
@@ -177,6 +184,9 @@ if (nrow(fluxdata_10min)*ncol(fluxdata_10min)>0){
   for (v in max(fluxdata_10min$Plot)){
     fluxdata_10min$Plot[(1+tenMin*(v-1)):(tenMin+tenMin*(v-1))] = 0 + v
   }
+#
+# ════════════════════════════╗
+#                             ▼
   write_delim(fluxdata_10min,"clean_data/Test_clean_10min.dat", delim = "\t")
 }
 #
@@ -189,6 +199,9 @@ if (nrow(fluxdata_15min)*ncol(fluxdata_15min)>0){
   for (v in max(fluxdata_15min$Plot)){
     fluxdata_15min$Plot[(1+fifteenMin*(v-1)):(fifteenMin+fifteenMin*(v-1))] = 0 + v
   }
+#
+# ════════════════════════════╗
+#                             ▼
   write_delim(fluxdata_15min,"clean_data/Test_clean_10min.dat", delim = "\t")
 }
 #
@@ -198,6 +211,9 @@ fluxdata_left <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
   filter(Recordings != twoMin & Recordings != fiveMin & Recordings != tenMin & Recordings != fifteenMin)
 if (nrow(fluxdata_left)*ncol(fluxdata_left)>0){
+#
+# ═══════════════════════════╗
+#                            ▼
   write_delim(fluxdata_left,"clean_data/Test_clean_left.dat", delim = "\t")
 }
 #
