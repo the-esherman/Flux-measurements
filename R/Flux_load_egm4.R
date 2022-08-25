@@ -50,8 +50,8 @@ fluxdat<-read.delim("clean_data/Cleaned_test_2min.dat") # Read as a tab delimite
 # ### Main Script: calculations ###
 #
 co2<-fluxdat$CO2.Ref #When importing from excel use 'CO2 ref', when importing from .dat it converts to CO2.Ref
-p<-fluxdat$ATMP/10 # Air pressure as measured by the EGM
-#Temp<-fluxdat$Input.C # (soil?) temperature from EGM4 (as measured by the )
+p<-fluxdat$ATMP/10 # Air pressure as measured by the EGM. Converted from mb to kPa
+#Temp<-fluxdat$Input.C # soil temperature from EGM4 optional sensor
 Temp<-fluxdat$AirT # Temperature added from a TinyTag
 PAR<-fluxdat$PAR # PAR added from PAR sensor/EM50 logger
 #
@@ -63,7 +63,7 @@ A<-0.0079 # m2
 #    ▼
 Vol<-0.000550 # m3
 plot<-fluxdat$Plot
-time_plot<-fluxdat$RecNo # Recording number, should be org as 1-x (where x is 27 for 2min measurements, 64 for 5min, 127 for 10min, 189 for 15min)
+time_plot<-fluxdat$RecNo # Recording number, should be org as 1-x (where x is 27 for 2min measurements, 64 for 5min, 127 for 10min, 189 for 15min). Not currently used
 time<-fluxdat$Input.E # DT (change in seconds, note that it measures only whole seconds, but each measurement is pr 4.8s, this can be changed in the dat file) # Not currently used
 recStart<-8 # Start of records, 8 ~ 33s cut
 #
@@ -114,7 +114,7 @@ sse<-vector("double")
 C1_fit<-matrix(NA,nrow = max(plot),ncol = 2)
 C1_fit_intcep<-vector("double") # Unused?
 f1_lin_umol<-matrix(NA,nrow = max(plot),ncol = 1)
-#for (i in plot) {}
+#
 for (i in plot){
   meanT[i]<-mean(Temp[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging temperature over the recordings
   meanP[i]<-mean(p[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging pressure over the recordings
@@ -128,7 +128,14 @@ for (i in plot){
 # linear production of CO2
 for (i in plot) {
   f1_lin_umol[i,]<-((C1_fit[i,2]*273.15*meanP[i]/(22.4*(meanT[i]+273.15)*101.325))*(Vol/A)*1000) # µmol CO2 m-2 s-1
-  #((C1_fit(i,1)*273.15*p(i)/(22.4*(Temp(i,1)+273.15)*101.325))*(V/A)*1000); # from matlab script
+  # The slope, C1_fit[i,2] is the change in CO2 concentration over time (µmol mol^-1 s^-1)
+  # meanP[i] is the average pressure of the measurement.
+  # The ideal gas at 273.15K and 101.325 kPa gives a molar volume of 22.4 dm^3 mol^-1
+  # Volume is given at m^3 and area (A) at m^2 times 1000 dm^3 m^-3
+  # meanT[i] is the average temperature in °C, converted to kelvin by adding 273.15
+  #
+  # This gives the equation with units:
+  # (µmol mol^-1 s^-1 * 273.15K * kPa / (22.4 dm^3 mol^-1 * K * 101.325 kPa)) * (m^3 / m^2) * 1000 dm^3 m^-3
 }
 #
 # Attach all data to an output file
@@ -143,10 +150,8 @@ for (i in plot) {
 }
 output[,7]<-C1_fit[,2] # p1
 output[,8]<-C1_fit[,1] # p2
-output[,9]<-f1_lin_umol # Linear production of CO2; CO2 m-2 s-1
-#output_dat<-rbind(c("Plot","sse","R2","df","R2_adj","rsme","p1","p2","f1_lin_umol"), output) # Adding a row for column names (does not change column names!)
-colnames(output)<- c("Plot","sse","R2","df","R2_adj","rsme","p1","p2","f1_lin_umol") # For rewriting the column names 
-#write.csv2(output_dat,"C:/Users/Emil/OneDrive - Umeå universitet/UmU/Study II - Moss/IRGA/R/20210601_all_2min_outR2.csv",row.names = FALSE, col.names = TRUE)
+output[,9]<-f1_lin_umol # Linear production of CO2; µmol CO2 m-2 s-1
+colnames(output)<- c("Plot","sse","R2","df","R2_adj","rsme","p1","p2","f1_lin_umol") # For rewriting the column names
 # Write excel file
 output_xl<-as.data.frame(output)
 #
