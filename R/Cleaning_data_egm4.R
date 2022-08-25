@@ -30,8 +30,8 @@ library(writexl) # For writing excel files
 # Load different data sets from same day.
 # OBS! the "Plot" needs to be continues between the files to work here. E.g. flux1 ends in Plot 36 and flux2 starts in Plot 37. Otherwise chaos ensures
 #
-# ═══════════════════╗
-#                    ▼
+# ════════════════════════════╗
+#                             ▼
 flux1 <- read_delim("raw_data/raw_test_1.dat", skip = 2)
 flux1 <- flux1 %>% # Here the last line is cut and all the columns are processed to match either as a numeric or character value
   slice(1:(n()-1)) %>%
@@ -42,8 +42,8 @@ flux1 <- flux1 %>%
   unite(Hour, Min, col = "Time", sep = ":") %>%
   unite(Date, Time, col = "Day_ID", sep = " ")
 #
-# ═══════════════════╗ # add more files as needed
-#                    ▼
+# ════════════════════════════╗ # add more files as needed
+#                             ▼
 flux2 <- read_delim("raw_data/raw_test_2.dat", skip = 2)
 flux2 <- flux2 %>% #Here the last line is cut and all the columns are processed to match either as a numeric or character value
   slice(1:(n()-1)) %>%
@@ -75,8 +75,8 @@ flux_all <- bind_rows(flux1,flux2, .id = NULL) %>%
 #
 # Load TinyTag temperature measurements
 #
-# ════════════════════╗
-#                     ▼
+# ═════════════════════════════╗
+#                              ▼
 TinyTag1 <- read_csv("raw_data/raw_test_airT.csv", skip = 5, col_names = c("Record", "Date_time", "Max_Temp", "AirT", "Min_Temp"))
 TinyTag1 <- TinyTag1 %>% # Split temperature from the unit and Date and time. Set temperature as numeric
   separate(AirT, sep = " ", into = c("AirT", "Unit")) %>%
@@ -97,8 +97,8 @@ flux_all_Temp <- left_join(flux_all, TinyTag_mini, by = "Day_ID")
 #
 # ### Combine PAR QED sensor from EM50 ###
 #
-# ═════════════════╗
-#                  ▼
+# ══════════════════════════╗
+#                           ▼
 fPAR1 <- read_xls("raw_data/raw_test_em50_PAR.xls", col_names = c("Date_time", "PAR1", "PAR2", "PAR3", "PAR4", "PAR5"), skip = 3, col_types = c("date", "numeric", "numeric", "numeric", "numeric", "numeric"))
 fPAR <- fPAR1 %>%
   separate(Date_time, sep = " ", into = c("Date", "Time")) %>%
@@ -154,9 +154,9 @@ if (nrow(fluxdata_2min)*ncol(fluxdata_2min)>0){
   for (v in max(fluxdata_2min$Plot)){
     fluxdata_2min$Plot[(1+twoMin*(v-1)):(twoMin+twoMin*(v-1))] = 0 + v
   }
-#
-# ═══════════════════════════╗
-#                            ▼
+  #
+  # ════════════════════════════════════╗
+  #                                     ▼
   write_delim(fluxdata_2min,"clean_data/Test_clean_2min.dat", delim = "\t")
 }
 #
@@ -169,9 +169,9 @@ if (nrow(fluxdata_5min)*ncol(fluxdata_5min)>0){
   for (v in max(fluxdata_5min$Plot)){
     fluxdata_5min$Plot[(1+fiveMin*(v-1)):(fiveMin+fiveMin*(v-1))] = 0 + v
   }
-#
-# ═══════════════════════════╗
-#                            ▼
+  #
+  # ════════════════════════════════════╗
+  #                                     ▼
   write_delim(fluxdata_5min,"clean_data/Test_clean_5min.dat", delim = "\t")
 }
 #
@@ -184,9 +184,9 @@ if (nrow(fluxdata_10min)*ncol(fluxdata_10min)>0){
   for (v in max(fluxdata_10min$Plot)){
     fluxdata_10min$Plot[(1+tenMin*(v-1)):(tenMin+tenMin*(v-1))] = 0 + v
   }
-#
-# ════════════════════════════╗
-#                             ▼
+  #
+  # ═════════════════════════════════════╗
+  #                                      ▼
   write_delim(fluxdata_10min,"clean_data/Test_clean_10min.dat", delim = "\t")
 }
 #
@@ -199,9 +199,9 @@ if (nrow(fluxdata_15min)*ncol(fluxdata_15min)>0){
   for (v in max(fluxdata_15min$Plot)){
     fluxdata_15min$Plot[(1+fifteenMin*(v-1)):(fifteenMin+fifteenMin*(v-1))] = 0 + v
   }
-#
-# ════════════════════════════╗
-#                             ▼
+  #
+  # ═════════════════════════════════════╗
+  #                                      ▼
   write_delim(fluxdata_15min,"clean_data/Test_clean_10min.dat", delim = "\t")
 }
 #
@@ -211,9 +211,9 @@ fluxdata_left <- fluxdata %>%
   left_join(flux_recLength, by = "Plot") %>%
   filter(Recordings != twoMin & Recordings != fiveMin & Recordings != tenMin & Recordings != fifteenMin)
 if (nrow(fluxdata_left)*ncol(fluxdata_left)>0){
-#
-# ═══════════════════════════╗
-#                            ▼
+  #
+  # ════════════════════════════════════╗
+  #                                     ▼
   write_delim(fluxdata_left,"clean_data/Test_clean_left.dat", delim = "\t")
 }
 #
