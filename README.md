@@ -53,4 +53,6 @@ Please note that the dummy data file for the EGM5 has been manipulated
 to match the date and time of the TinyTag and external PAR data from the
 EGM4 measurements. This is to enable using the same measurements for
 demonstrating how to combine in the cleaning script. The measurements
-are *not* taken at the same time nor even from the same plots!
+are *not* taken at the same time nor even from the same plots! The ID’s
+are also made up and more can be added as needed to make for greater
+degree of detail.
