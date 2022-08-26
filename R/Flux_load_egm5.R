@@ -158,8 +158,8 @@ for (i in plot) {
   output[i,4]<-meanP[i] # average pressure (kPa)
   output[i,5]<-sse[[i]] # sse
   output[i,6]<-fluxmod[[i]]$r.squared # R2
-  output[i,7]<-fluxmod[[i]]$fstatistic[[2]] # Degrees of freedom, df
-  output[i,8]<-fluxmod[[i]]$fstatistic[[3]] # Independent variables and categories
+  output[i,7]<-fluxmod[[i]]$fstatistic[[3]] # Degrees of freedom, df
+  output[i,8]<-fluxmod[[i]]$fstatistic[[2]] # Independent variables and categories
   output[i,9]<-fluxmod[[i]]$adj.r.squared # Adj. R2
   output[i,10]<-fluxmod[[i]]$sigma #RSME
   output[i,11]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
