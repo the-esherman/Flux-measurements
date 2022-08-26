@@ -3,19 +3,54 @@
 
 # Flux measurements
 
-This is a small project to process data from the EGM4 IRGA. A work in
-progress, mainly personal project.
+This is a small project to process data from the EGM4 IRGA (and now also
+EGM5). A work in progress, mainly personal project.
 
-Currently there is a file for processing cleaned data. There is work on
-a script to process raw-data from the EGM4, merge it with other
-measurements of the same day and merge it with data from a TinyTag
-temperature logger and PAR Photon Flux Sensor coupled to a EM50 logger
-station.
+Currently there is a file for processing cleaned data (Flux_load_egm4
+and Flux_load_egm5). There has also been added a script
+(Cleaning_data_egm4, Cleaning_data_egm5) to process raw data from the
+EGM4 and EGM5, merge it with other measurements of the same day and
+merge it with data from a TinyTag temperature logger and PAR Photon Flux
+Sensor coupled to a EM50 logger.
 
-Stil in the planing phase is to expand to the EGM5 which has a slightly
-different file system
+For both EGM’s they are using the CPY chamber mode which gives a certain
+structure. For the EGM4 this is the CPY-2 (probe type 8) and for the
+EGM5 it is the CPY-5 (mode 3).
 
-# The EGM4
+For information on the EGM data structure see the respective manuals
+available online.
+
+EGM4: p. 38-39
+
+EGM5: p. 90-94
+
+(*More text on it’s way, maybe*)
+
+### The EGM4
 
 The EGM4 only stores 1000 lines of data internally and therefore several
 files might be generated during one days measurements.
+
+As I have not been using a standard size chamber, the volume is not the
+same as the chamber from PP systems. This is among the factors that —
+for now — need to be manually set in the processing script.
+
+The dummy raw data file is from real data, incl. the TinyTag and PAR
+sensor data
+
+### The EGM5
+
+The EGM5 has a lot more storage capacity thanks to a USB port. It is
+therefore less likely that several files need to be combined, but there
+might be other reasons for doing so. Either way the data needs some
+general structuring before loading into the flux script.
+
+The flux script is for large parts the same, with a few changes to match
+naming and difference in measurement regime. The EGM5 measures every
+second, compared to the EGM4’s every 4.8s.
+
+Please note that the dummy data file for the EGM5 has been manipulated
+to match the date and time of the TinyTag and external PAR data from the
+EGM4 measurements. This is to enable using the same measurements for
+demonstrating how to combine in the cleaning script. The measurements
+are *not* taken at the same time nor even from the same plots!
