@@ -46,6 +46,7 @@ library(writexl) # For writing excel files
 # ══════════════════════════════╗
 #                               ▼
 fluxdat<-read.delim("clean_data/EGM5_Test_clean_2min.dat") # Read as a tab delimited files
+ID_info<-read.delim("clean_data/EGM5_IDs.txt") # The data with information on the plots and IDs
 # ### Main Script: calculations ###
 #
 co2<-fluxdat$CO2 #When importing from excel use 'CO2 ref', when importing from .dat it converts to CO2.Ref
@@ -149,23 +150,27 @@ lmp <- function (modelobject) {
 }
 #
 # Attach all data to an output file
-output<-matrix(NA,nrow = max(plot),ncol = 11) # missing P-value and F statistic
+output<-matrix(NA,nrow = max(plot),ncol = 15) # missing P-value and F statistic
 output[,1]<-(1:max(plot)) # Plots
+output[,2]<-(ID_info[[1]]) # ID of plots
 for (i in plot) {
-  output[i,2]<-sse[[i]] # sse
-  output[i,3]<-fluxmod[[i]]$r.squared # R2
-  output[i,4]<-fluxmod[[i]]$df[2] # Degrees of freedom, df
-  output[i,5]<-fluxmod[[i]]$adj.r.squared # Adj. R2
-  output[i,6]<-fluxmod[[i]]$sigma #RSME
-  output[i,7]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
-  output[i,8]<-lmp(linflux[[i]]) # P-value of model
+  output[i,3]<-meanT[i] # average temperature (°C)
+  output[i,4]<-meanP[i] # average pressure (kPa)
+  output[i,5]<-sse[[i]] # sse
+  output[i,6]<-fluxmod[[i]]$r.squared # R2
+  output[i,7]<-fluxmod[[i]]$fstatistic[[2]] # Degrees of freedom, df
+  output[i,8]<-fluxmod[[i]]$fstatistic[[3]] # Independent variables and categories
+  output[i,9]<-fluxmod[[i]]$adj.r.squared # Adj. R2
+  output[i,10]<-fluxmod[[i]]$sigma #RSME
+  output[i,11]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
+  output[i,12]<-lmp(linflux[[i]]) # P-value of model
   # As this is a simple, one predictor, linear regression an alternative and easier value is the coefficient p-value, which will be the same.
-  # output[i,8]<-fluxmod[[i]]$coefficients[,4][[2]]
+  # output[i,13]<-fluxmod[[i]]$coefficients[,4][[2]]
 }
-output[,9]<-C1_fit[,2] # p1
-output[,10]<-C1_fit[,1] # p2
-output[,11]<-f1_lin_umol # Linear production of CO2; µmol CO2 m-2 s-1
-colnames(output)<- c("Plot","sse","R2","df","R2_adj","rsme", "F-value_model", "P-value_model","p1","p2","f1_lin_umol") # For rewriting the column names
+output[,13]<-C1_fit[,2] # p1
+output[,14]<-C1_fit[,1] # p2
+output[,15]<-f1_lin_umol # Linear production of CO2; µmol CO2 m-2 s-1
+colnames(output)<- c("Plot", "ID", "Tair_(°C)", "ATMP_(kPa)","sse","R2","df", "independent_var","R2_adj","rsme", "F-value_model", "P-value_model","p1","p2","f1_lin_umol") # For rewriting the column names
 # Write excel file
 output_xl<-as.data.frame(output)
 #
