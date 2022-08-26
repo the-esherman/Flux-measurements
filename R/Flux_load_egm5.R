@@ -152,7 +152,6 @@ lmp <- function (modelobject) {
 output<-matrix(NA,nrow = max(plot),ncol = 11) # missing P-value and F statistic
 output[,1]<-(1:max(plot)) # Plots
 for (i in plot) {
-  output[i,2]
   output[i,2]<-sse[[i]] # sse
   output[i,3]<-fluxmod[[i]]$r.squared # R2
   output[i,4]<-fluxmod[[i]]$df[2] # Degrees of freedom, df
