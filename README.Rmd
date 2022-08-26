@@ -42,4 +42,4 @@ The EGM5 has a lot more storage capacity thanks to a USB port. It is therefore l
 
 The flux script is for large parts the same, with a few changes to match naming and difference in measurement regime. The EGM5 measures every second, compared to the EGM4's every 4.8s.
 
-Please note that the dummy data file for the EGM5 has been manipulated to match the date and time of the TinyTag and external PAR data from the EGM4 measurements. This is to enable using the same measurements for demonstrating how to combine in the cleaning script. The measurements are *not* taken at the same time nor even from the same plots!
+Please note that the dummy data file for the EGM5 has been manipulated to match the date and time of the TinyTag and external PAR data from the EGM4 measurements. This is to enable using the same measurements for demonstrating how to combine in the cleaning script. The measurements are *not* taken at the same time nor even from the same plots! The ID's are also made up and more can be added as needed to make for greater degree of detail.
