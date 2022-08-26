@@ -46,6 +46,9 @@ library(writexl) # For writing excel files
 # ══════════════════════════════╗
 #                               ▼
 fluxdat<-read.delim("clean_data/EGM5_Test_clean_2min.dat") # Read as a tab delimited files
+#
+# ══════════════════════════════╗
+#                               ▼
 ID_info<-read.delim("clean_data/EGM5_IDs.txt") # The data with information on the plots and IDs
 # ### Main Script: calculations ###
 #
@@ -165,7 +168,7 @@ for (i in plot) {
   output[i,11]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
   output[i,12]<-lmp(linflux[[i]]) # P-value of model
   # As this is a simple, one predictor, linear regression an alternative and easier value is the coefficient p-value, which will be the same.
-  # output[i,13]<-fluxmod[[i]]$coefficients[,4][[2]]
+  # output[i,12]<-fluxmod[[i]]$coefficients[,4][[2]]
 }
 output[,13]<-C1_fit[,2] # p1
 output[,14]<-C1_fit[,1] # p2
