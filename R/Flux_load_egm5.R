@@ -60,11 +60,11 @@ PAR<-fluxdat$PAR # PAR added from PAR sensor/EM50 logger
 #
 # ═╗
 #  ▼
-A<-0.0079 # m2
+A<-0.0167 # m2, CPY-5 without collar: 167cm^2 or 0.0167 m^2
 #
 # ═══╗
 #    ▼
-Vol<-0.000550 # m3
+Vol<-0.002427 # m3, CPY-5 without collar: 2427mL or 0.002427 m^3
 plot<-fluxdat$Plot
 time_plot<-fluxdat$RecNo # Recording number, not currently used
 time<-fluxdat$DT # DT (change in seconds) # Not currently used
