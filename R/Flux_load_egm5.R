@@ -99,7 +99,8 @@ for (q in 1:max(plot)) {
   plot(c.co2.temp[recStart:recEnd]~Dt[recStart:recEnd], ylab = "ppm CO2", xlab = "Time (s)") # plot the graph. Using CO2 values for y and time (Dt) for x, but removing the first number of measurements (recStart)
   abline(lm(c.co2.temp[recStart:recEnd]~Dt[recStart:recEnd])) # Create a linear line with lm
   #
-  mtext(text = paste("Plot nr", plot[recStart+recEnd*(q-1)], sep = " "), side = 3, line = -2) # Write plot number in plot
+  # mtext(text = paste("Plot nr", plot[recStart+recEnd*(q-1)], sep = " "), side = 3, line = -2) # Write plot number in plot
+  mtext(text = paste("ID:", ID_info$ID[q], sep = " "), side = 3, line = -2) # Write ID in plot
   mtext(text = round(summary(lm(c.co2.temp[recStart:recEnd]~Dt[recStart:recEnd]))$r.squared, digits = 4), side = 1, line = -2) # calculate and write the R^2 value of the linear model 
 }
 dev.off()
@@ -121,6 +122,7 @@ f1_lin_umol<-matrix(NA,nrow = max(plot),ncol = 1)
 for (i in plot){
   meanT[i]<-mean(Temp[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging temperature over the recordings
   meanP[i]<-mean(p[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging pressure over the recordings
+  meanPAR[i]<-mean(PAR[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging PAR over recordings
   co2trim[[i]]<-co2[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))] # CO2 for i=1:max(plot)
   timetrim[[i]]<-Dt[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))] # time for i=1:max(plot)
   fluxmod[[i]]<-summary(lm(co2trim[[i]]~timetrim[[i]])) # model summary of linear regression
@@ -153,26 +155,27 @@ lmp <- function (modelobject) {
 }
 #
 # Attach all data to an output file
-output<-matrix(NA,nrow = max(plot),ncol = 15) # missing P-value and F statistic
+output<-matrix(NA,nrow = max(plot),ncol = 16) # missing P-value and F statistic
 output[,1]<-(1:max(plot)) # Plots
-output[,2]<-(ID_info[[1]]) # ID of plots
+output[,2]<-(ID_info$ID) # ID of plots
 for (i in plot) {
   output[i,3]<-meanT[i] # average temperature (°C)
   output[i,4]<-meanP[i] # average pressure (kPa)
-  output[i,5]<-sse[[i]] # sse
-  output[i,6]<-fluxmod[[i]]$r.squared # R2
-  output[i,7]<-fluxmod[[i]]$fstatistic[[3]] # Degrees of freedom, df
-  output[i,8]<-fluxmod[[i]]$fstatistic[[2]] # Independent variables and categories
-  output[i,9]<-fluxmod[[i]]$adj.r.squared # Adj. R2
-  output[i,10]<-fluxmod[[i]]$sigma #RSME
-  output[i,11]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
-  output[i,12]<-lmp(linflux[[i]]) # P-value of model
+  output[i,5]<-meanPAR[i] # average PAR (µmol m^-2 s^-1)
+  output[i,6]<-sse[[i]] # sse
+  output[i,7]<-fluxmod[[i]]$r.squared # R2
+  output[i,8]<-fluxmod[[i]]$fstatistic[[3]] # Degrees of freedom, df
+  output[i,9]<-fluxmod[[i]]$fstatistic[[2]] # Independent variables and categories
+  output[i,10]<-fluxmod[[i]]$adj.r.squared # Adj. R2
+  output[i,11]<-fluxmod[[i]]$sigma #RSME
+  output[i,12]<-fluxmod[[i]]$fstatistic[[1]] # F statistic for model
+  output[i,13]<-lmp(linflux[[i]]) # P-value of model
   # As this is a simple, one predictor, linear regression an alternative and easier value is the coefficient p-value, which will be the same.
   # output[i,12]<-fluxmod[[i]]$coefficients[,4][[2]]
 }
-output[,13]<-C1_fit[,2] # p1
-output[,14]<-C1_fit[,1] # p2
-output[,15]<-f1_lin_umol # Linear production of CO2; µmol CO2 m-2 s-1
+output[,14]<-C1_fit[,2] # p1
+output[,15]<-C1_fit[,1] # p2
+output[,16]<-f1_lin_umol # Linear production of CO2; µmol CO2 m-2 s-1
 colnames(output)<- c("Plot", "ID", "Tair_(°C)", "ATMP_(kPa)","sse","R2","df", "independent_var","R2_adj","rsme", "F-value_model", "P-value_model","p1","p2","f1_lin_umol") # For rewriting the column names
 # Write excel file
 output_xl<-as.data.frame(output)
