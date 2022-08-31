@@ -38,6 +38,18 @@ library(readxl) # For reading excel files with the "read_excel" command
 library(writexl) # For writing excel files
 #
 #
+# ### Functions ###
+#
+# Function to extract p-value of model
+# From https://gist.github.com/stephenturner/722049#file-pvalue-from-lm-object-r
+lmp <- function (modelobject) {
+  if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+  f <- summary(modelobject)$fstatistic
+  p <- pf(f[1],f[2],f[3],lower.tail=F)
+  attributes(p) <- NULL
+  return(p)
+}
+#
 #
 # ### Loading data ###
 #
@@ -144,15 +156,6 @@ for (i in plot) {
   # (µmol mol^-1 s^-1 * 273.15K * kPa / (22.4 dm^3 mol^-1 * K * 101.325 kPa)) * (m^3 / m^2) * 1000 dm^3 m^-3
 }
 #
-# Function to extract p-value of model
-# From https://gist.github.com/stephenturner/722049#file-pvalue-from-lm-object-r
-lmp <- function (modelobject) {
-  if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
-  f <- summary(modelobject)$fstatistic
-  p <- pf(f[1],f[2],f[3],lower.tail=F)
-  attributes(p) <- NULL
-  return(p)
-}
 #
 # Attach all data to an output file
 output<-matrix(NA,nrow = max(plot),ncol = 16) # missing P-value and F statistic
