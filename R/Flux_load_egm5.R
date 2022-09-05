@@ -67,7 +67,7 @@ ID_info<-read.delim("clean_data/EGM5_IDs.txt") # The data with information on th
 co2<-fluxdat$CO2 #When importing from excel use 'CO2 ref', when importing from .dat it converts to CO2.Ref
 p<-fluxdat$ATMP/10 # Air pressure as measured by the EGM. Converted from mb to kPa
 #Temp<-fluxdata$Tair # Temperature measured by CPY-5 chamber
-Temp<-fluxdat$AirT # Temperature added from a TinyTag
+Temp<-fluxdat$Tair # Temperature added from a TinyTag
 PAR<-fluxdat$PAR # PAR added from PAR sensor/EM50 logger
 #
 # ═╗
@@ -123,13 +123,17 @@ dev.off()
 # Define all vectors and matrices used
 meanT<-vector("double")
 meanP<-vector("double")
+meanPAR<-vector("double")
 co2trim<-vector("list")
 timetrim<-vector("list")
+#
+# Linear regression
 fluxmod<-vector("list")
 sse<-vector("double")
 C1_fit<-matrix(NA,nrow = max(plot),ncol = 2)
 C1_fit_intcep<-vector("double") # Unused?
 f1_lin_umol<-matrix(NA,nrow = max(plot),ncol = 1)
+linflux<-vector("list")
 #
 for (i in plot){
   meanT[i]<-mean(Temp[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging temperature over the recordings
@@ -137,6 +141,8 @@ for (i in plot){
   meanPAR[i]<-mean(PAR[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging PAR over recordings
   co2trim[[i]]<-co2[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))] # CO2 for i=1:max(plot)
   timetrim[[i]]<-Dt[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))] # time for i=1:max(plot)
+  # Models
+  # Linear
   fluxmod[[i]]<-summary(lm(co2trim[[i]]~timetrim[[i]])) # model summary of linear regression
   sse[[i]]<-deviance(lm(co2trim[[i]]~timetrim[[i]])) # sse
   C1_fit[i,]<-cbind(fluxmod[[i]]$coefficients[1,1],fluxmod[[i]]$coefficients[2,1]) # Array of intercept and slope (b and a in the regression y=a*x+b)
