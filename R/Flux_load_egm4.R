@@ -109,15 +109,16 @@ dev.off()
 #
 # The process of getting all data as in matlab
 # Define all vectors and matrices used
-meanT<-vector("double")
-meanP<-vector("double")
-co2trim<-vector("list")
-timetrim<-vector("list")
-fluxmod<-vector("list")
+meanT<-vector("double") # Average temperature
+meanP<-vector("double") # Average pressure
+co2trim<-vector("list") # CO2 concentration trimmed to remove first few measures
+timetrim<-vector("list") # Time, trimmed to remove the first few measurements (33,6s) as per variable "Time"
+fluxmod<-vector("list") # a list to store model summary in
 sse<-vector("double")
-C1_fit<-matrix(NA,nrow = max(plot),ncol = 2)
+C1_fit<-matrix(NA,nrow = max(plot),ncol = 2) # for intercept and slope
 C1_fit_intcep<-vector("double") # Unused?
-f1_lin_umol<-matrix(NA,nrow = max(plot),ncol = 1)
+linflux<-vector("list") # for storing information on linear regression.
+f1_lin_umol<-matrix(NA,nrow = max(plot),ncol = 1) # linear production of CO2
 #
 for (i in plot){
   meanT[i]<-mean(Temp[(recStart+recEnd*(i-1)):(recEnd+recEnd*(i-1))]) # averaging temperature over the recordings
