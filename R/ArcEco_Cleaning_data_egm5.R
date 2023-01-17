@@ -2,6 +2,7 @@
 # For EGM5
 # Using CPY mode (M3)
 #
+# By Emil A.S. Andersen
 #
 # Manual:
 # The document is set up so that only a few changes should be necessary between data files.

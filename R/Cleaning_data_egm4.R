@@ -2,6 +2,7 @@
 # For EGM4
 # Using CPY-2 (Probe type 8), or forced probe type 8
 #
+# By Emil A.S. Andersen
 #
 # Manual:
 # The document is set up so that only a few changes should be necessary between data files.
