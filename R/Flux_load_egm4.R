@@ -51,6 +51,10 @@ fluxdat<-read.delim("clean_data/Cleaned_test_2min.dat") # Read as a tab delimite
 # ══════════════════════════════╗
 #                               ▼
 ID_info<-read.delim("clean_data/EGM4_IDs.txt") # The data with information on the plots and IDs
+#
+# Gas constant
+R_const<-8.31446261815324*1000/10^6 # m^3*Pa*K^-1*mol^-1 * kPa*Pa^-1 * µmol*mol^-1 =  m^3*kPa*K^-1*µmol^-1
+#
 # ### Main Script: calculations ###
 #
 co2<-fluxdat$CO2.Ref #When importing from excel use 'CO2 ref', when importing from .dat it converts to CO2.Ref
@@ -133,15 +137,17 @@ for (i in plot){
 #
 # linear production of CO2
 for (i in plot) {
-  f1_lin_umol[i,]<-((C1_fit[i,2]*273.15*meanP[i]/(22.4*(meanT[i]+273.15)*101.325))*(Vol/A)*1000) # µmol CO2 m-2 s-1
-  # The slope, C1_fit[i,2] is the change in CO2 concentration over time (µmol mol^-1 s^-1)
+  f1_lin_umol[i,]<-((C1_fit[i,2]*meanP[i]/((meanT[i]+273.15)*R_const))*(Vol/A)) # µmol CO2 m-2 s-1
+  # This equation follows the ideal gas law (P*V = n*R*T)
+  # d[CO2]*P / (T*R) * V/A
+  #
+  # The slope, C1_fit[i,2] is the change in CO2 concentration over time (d[CO2] = µmol mol^-1 s^-1)
   # meanP[i] is the average pressure of the measurement.
-  # The ideal gas at 273.15K and 101.325 kPa gives a molar volume of 22.4 dm^3 mol^-1
-  # Volume is given at m^3 and area (A) at m^2 times 1000 dm^3 m^-3
   # meanT[i] is the average temperature in °C, converted to kelvin by adding 273.15
+  # Volume is given at m^3 and area (A) at m^2 times 1000 dm^3 m^-3
   #
   # This gives the equation with units:
-  # (µmol mol^-1 s^-1 * 273.15K * kPa / (22.4 dm^3 mol^-1 * K * 101.325 kPa)) * (m^3 / m^2) * 1000 dm^3 m^-3
+  # (µmol mol^-1 s^-1 * kPa) / (K * m^3 * kPa * K^-1 * µmol^-1) * (m^3 / m^2)
 }
 #
 # Function to extract p-value of model
