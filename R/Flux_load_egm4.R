@@ -82,7 +82,7 @@ recEnd<-27 # End of records(27 for 2min measurements, 64 for 5min, 127 for 10min
 #
 # Change time at record start to T = 0
 Time<-vector("double")
-Time<-seq((-(recStart-1)*4.8),(4.8*(recEnd-recStart)), 4.8) # Make first 33,6s negative (recStart of 8 times 4.8s between measurements) and end depending on last recording number
+Time<-seq((-(recStart-1)*4.8),(4.8*(recEnd-recStart)), 4.8) # Make first 33.6s negative (recStart of 8 times 4.8s between measurements) and end depending on last recording number
 Dt<-rep(Time,(length(plot))/recEnd)
 #
 #
@@ -109,6 +109,43 @@ for (q in 1:max(plot)) {
 }
 dev.off()
 #
+#
+# Bootstrap the samples to exclude x amount of samples. See XX for reference
+# x = 20 here is a cutoff of 33.6 seconds just as with other cutoff
+slopes <- data.frame(plot=NA,slope=NA)
+for (plots in unique(fluxdat$Plot)){ # Run for each plot
+  plotdat <- fluxdat[fluxdat$Plot == plots,]
+  plotdat$number <- c(0:(nrow(plotdat)-1)*4.8)
+  plotid <- rep(plots,15000)
+  slope <- c()
+  for (i in seq(1:15000)){ # Run 15000 repetitions
+    sub <- plotdat[sample(nrow(plotdat),size=20),]
+    slope[i] <- coef(lm(data=sub, CO2.Ref ~ number))[2] # Run through CO2 reference
+  }
+  slopes <- rbind(slopes,
+                 data.frame(plot = plotid,
+                            slope = slope))
+}
+slopes <- na.omit(slopes) # remove NA from top
+#
+# Plot 25 is 1 for all 15000 replicates
+ggplot(slopes[slopes$plot != 25,],(aes(x=slope,fill=as.factor(plot)))) +
+  geom_density(alpha = 0.5)
+ggplot(slopes[slopes$plot == 25,],(aes(x=slope,fill=as.factor(plot)))) +
+  geom_density(alpha = 0.5)
+#
+
+coef(lm(data=sub, CO2.Ref ~ number))[2]
+summary(lm(co2trim[[30]]~timetrim[[30]]))$coefficients[2,1]
+
+#
+# Get most frequent value and confidence interval around
+co2trim_boot_density<-vector(mode="list", length = length(unique(fluxdat$Plot)))
+for (plots in unique(fluxdat$Plot)) {
+  co2trim_boot_density[[plots]] <- with(slopes, density(slope[which(plot == plots)], n = 15000)) # kernel density estimate
+  co2trim_boot[[plots,2]] <- with(co2trim_boot_density[[plots]], x[which.max(y)]) # based on which y value is max density, pick the x. This is the mode
+}
+
 #
 #
 # The process of getting all data as in matlab
