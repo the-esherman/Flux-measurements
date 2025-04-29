@@ -3,3 +3,13 @@
 .Rdata
 .httr-oauth
 .DS_Store
+
+# Data
+clean_data/*
+raw_data/*
+output/*
+
+# Code to ignore
+Flux_load_egm5_tester.R
+Flux_load_egm5_tester2.R
+Removed_code.R
